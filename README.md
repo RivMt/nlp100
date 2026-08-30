@@ -73,7 +73,12 @@ python main.py 55
 
 - `res/questions-words/questions-words.txt`: 単語アナロジー評価データ
 - `res/WordSimilarity-353/wordsim353.tsv`: WordSimilarity-353評価データ
-- `res/gensim-data/`: gensimが取得した単語ベクトルのキャッシュ
+- `res/GoogleNews-vectors-negative300.bin`: Google NewsのWord2Vecバイナリ
+
+単語ベクトルはNumPyを用いたバイナリローダーで直接読み込みます。デフォルトでは
+`res/GoogleNews-vectors-negative300.bin`を使用します。以前にgensimで取得した
+`res/gensim-data/word2vec-google-news-300/word2vec-google-news-300.gz`が存在する
+場合は、互換性のため圧縮ファイルも読み込めます。
 
 `out/<問題番号>/`には、各問題が生成したJSON、TSV、画像などを保存します。
 例えば、問題54の結果は`out/54/`、問題58と59の可視化結果はそれぞれ
@@ -87,23 +92,23 @@ python main.py 55
 
 | 環境変数 | デフォルト値 | 説明 |
 | --- | --- | --- |
-| `NLP100_WORD_VECTORS` | `word2vec-google-news-300` | 第6章で使用する単語ベクトル |
+| `NLP100_WORD2VEC_PATH` | `res/GoogleNews-vectors-negative300.bin` | Word2Vecバイナリファイルのパス |
 | `NLP100_ANALOGY_LIMIT` | 制限なし | analogyデータで各セクションから使用する最大事例数 |
 | `NLP100_RESTRICT_VOCAB` | 制限なし | 類似語検索で使用する語彙数 |
 
 例:
 
 ```powershell
-$env:NLP100_WORD_VECTORS = "glove-wiki-gigaword-50"
+$env:NLP100_WORD2VEC_PATH = "res/GoogleNews-vectors-negative300.bin"
 $env:NLP100_ANALOGY_LIMIT = "10"
 $env:NLP100_RESTRICT_VOCAB = "50000"
 python main.py 54
 ```
 
-デフォルトのGoogle News Word2Vecモデルは約1.6 GBあります。短時間で動作確認する
-場合は、軽量な単語ベクトルと評価件数の制限を利用してください。軽量モデルでは
-Google Newsモデルと語彙や次元数が異なるため、課題の最終結果にはデフォルトモデルを
-使用してください。
+Google News Word2Vecのバイナリファイルは約3.4 GB、gzip圧縮ファイルは約1.6 GB
+あります。短時間で動作確認する場合は、Word2Vecバイナリ形式の小規模なモデルと
+評価件数の制限を利用してください。小規模モデルでは語彙や次元数が異なるため、
+課題の最終結果にはGoogle Newsモデルを使用してください。
 
 ## AIの利用について
 

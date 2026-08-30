@@ -1,6 +1,6 @@
 PROBLEM_DESCRIPTION = "50. Load Google News vectors and display United_States."
 
-from chap06.common import MODEL_NAME, get_vector, load_vectors, resolve_key, save_json
+from chap06.common import get_vector, load_vectors, resolve_key, save_json
 from utils.path_solver import output_path
 
 
@@ -8,7 +8,7 @@ def main() -> None:
     vectors = load_vectors()
     vector = get_vector(vectors, "United_States")
     result = {
-        "model": MODEL_NAME,
+        "model": "GoogleNews-vectors-negative300",
         "term": "United_States",
         "resolved_key": resolve_key(vectors, "United_States"),
         "dimensions": int(vector.shape[0]),
