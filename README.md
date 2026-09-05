@@ -1,4 +1,4 @@
-# 言語処理100本ノック 2025 — 第6章
+# 言語処理100本ノック 2025 — 第6章〜第7章
 
 富士フイルム自然言語処理課題コードです。
 
@@ -22,12 +22,18 @@ python -m pip install -r requirements.txt
 
 ### コマンドから実行
 
-`main.py`に第6章の問題番号（50〜59）を渡して実行します。
+`main.py`に実装済みの問題番号（50〜69）を渡して実行します。
 
 ```powershell
 python main.py 50
-python main.py 54
-python main.py 55
+python main.py 60
+python main.py 69
+```
+
+問題固有の引数は、問題番号の後ろに指定します。
+
+```powershell
+python main.py 65 "an excellent movie"
 ```
 
 `main.py`は対象問題の`PROBLEM_DESCRIPTION`を表示してから、登録された
@@ -39,7 +45,7 @@ python main.py 55
 2. コマンドパレットの「Python: Select Interpreter」から
    `venv\Scripts\python.exe`を選択します。
 3. 「実行とデバッグ」ビューで`Pydbg: main.py`を選択して開始します。
-4. 引数入力欄に問題番号を入力します。例: `54`
+4. 引数入力欄に問題番号と必要な引数を入力します。例: `65 "an excellent movie"`
 
 デバッグ設定は[`.vscode/launch.json`](.vscode/launch.json)にあります。環境変数を
 利用する場合は、プロジェクトルートに`.env`を作成すると、この設定から読み込まれます。
@@ -52,37 +58,52 @@ python main.py 55
 ├── chap06/              # 第6章: 単語ベクトル（問題50〜59）
 │   ├── 50.py〜59.py     # 各問題の実装
 │   └── common.py        # 第6章で共通して利用する処理
-├── utils/               # パス、キャッシュ、出力などの共通処理
-├── res/                 # データセットおよび単語ベクトルのキャッシュ
+├── chap07/              # 第7章: 機械学習（問題60〜69）
+│   ├── 60.py〜69.py     # 各問題の実装
+│   └── common.py        # 第7章で共通して利用する処理
+├── utils/               # 章をまたいで利用する共通処理
+├── res/                 # データセットおよびモデルのキャッシュ
 └── out/                 # 問題ごとの実行結果
 ```
 
-各問題は`chap06/50.py`から`chap06/59.py`に実装され、先頭に
-`PROBLEM_DESCRIPTION`、実行処理として`main()`を持ちます。第6章内の共通処理は
-`chap06/common.py`、汎用的な処理は`utils/`に配置しています。
+各問題は`chapXX/YY.py`に実装され、先頭に`PROBLEM_DESCRIPTION`、実行処理として
+`main()`を持ちます。章内の共通処理は`chapXX/common.py`、全章共通の処理は
+`utils/`に配置しています。
 
-問題55は問題54の実行結果を利用します。`out/54/capital_common_countries.tsv`が
-存在する場合は問題54を再実行せず、存在しない場合に限り問題54の`main()`を
-同じプロセス内で実行します。問題54の対象は`capital-common-countries`セクション
-のみであるため、この結果に文法的アナロジーの事例は含まれません。
+前の問題の結果を利用する問題では、必要な`out/<問題番号>/`のファイルを確認します。
+すべて存在する場合は再実行せず、不足している場合に限り、先行問題の`main()`を
+同じプロセス内で実行します。
+
+- 問題55は、問題54が出力する`capital_common_countries.tsv`を利用します。
+- 問題62は、問題61が出力する学習データの特徴ベクトルを利用し、学習済みモデルと
+  `DictVectorizer`を保存します。
+- 問題63〜68は、問題62が保存したモデルと`DictVectorizer`を利用します。検証データや
+  評価データが必要な処理では、問題61の特徴ベクトルも利用します。
+- 問題69は、問題61の学習・検証データを利用し、正則化パラメータごとにモデルを
+  学習します。
+
+問題54の対象は`capital-common-countries`セクションのみであるため、その出力に
+文法的アナロジーの事例は含まれません。
 
 ## `res`と`out`
 
-`res/<データセット名>/`には、ダウンロードした評価データとモデルキャッシュを
+`res/<データセット名>/`には、ダウンロードしたデータセットやモデルのキャッシュを
 保存します。主なデータは次のとおりです。
 
 - `res/questions-words/questions-words.txt`: 単語アナロジー評価データ
 - `res/WordSimilarity-353/wordsim353.tsv`: WordSimilarity-353評価データ
 - `res/GoogleNews-vectors-negative300.bin`: Google NewsのWord2Vecバイナリ
+- `res/SST-2/train.tsv`: SST-2の学習データ
+- `res/SST-2/dev.tsv`: SST-2の検証データ
 
 単語ベクトルはNumPyを用いたバイナリローダーで直接読み込みます。デフォルトでは
 `res/GoogleNews-vectors-negative300.bin`を使用します。以前にgensimで取得した
 `res/gensim-data/word2vec-google-news-300/word2vec-google-news-300.gz`が存在する
 場合は、互換性のため圧縮ファイルも読み込めます。
 
-`out/<問題番号>/`には、各問題が生成したJSON、TSV、画像などを保存します。
-例えば、問題54の結果は`out/54/`、問題58と59の可視化結果はそれぞれ
-`out/58/`と`out/59/`に保存されます。
+`out/<問題番号>/`には、各問題が生成したJSON、TSV、画像、学習済みモデルなどを
+保存します。例えば、問題54の結果は`out/54/`、問題61の特徴ベクトルは`out/61/`、
+問題62の学習済みモデルは`out/62/`、問題69のグラフは`out/69/`に保存されます。
 
 `res/`と`out/`の内容はGitの管理対象外です。必要に応じて再生成してください。
 
