@@ -1,5 +1,3 @@
-"""Download and load the SST-2 files shared by chapters 7–10."""
-
 from __future__ import annotations
 
 import csv
@@ -18,7 +16,6 @@ SST2_DIR = resource_path("SST-2")
 
 
 def ensure_sst2() -> Path:
-    """Download only the labeled train and development files when missing."""
     required = ("train.tsv", "dev.tsv")
     if all((SST2_DIR / name).is_file() for name in required):
         return SST2_DIR
@@ -42,7 +39,6 @@ def load_sst2_split(
     *,
     limit_from_environment: bool = False,
 ) -> List[Dict[str, str]]:
-    """Load train/dev rows, optionally respecting NLP100_MAX_EXAMPLES."""
     if split not in {"train", "dev"}:
         raise ValueError(f"Unsupported SST-2 split: {split!r}")
     path = ensure_sst2() / f"{split}.tsv"

@@ -1,5 +1,3 @@
-"""Configure third-party model caches below the project res directory."""
-
 from __future__ import annotations
 
 import os

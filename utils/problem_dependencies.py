@@ -1,5 +1,3 @@
-"""Run prerequisite problems only when their expected outputs are missing."""
-
 from __future__ import annotations
 
 import importlib
@@ -23,7 +21,6 @@ def _problem_main(problem: int) -> Callable[[], object]:
 
 
 def ensure_problem_outputs(problem: int, *relative_paths: PathLike) -> List[Path]:
-    """Return prerequisite outputs, running its problem once when any are absent."""
     outputs = [OUT_ROOT / str(problem) / Path(path) for path in relative_paths]
     missing = [path for path in outputs if not path.exists()]
     if not missing:
