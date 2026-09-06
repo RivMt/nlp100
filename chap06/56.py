@@ -28,7 +28,7 @@ def main() -> None:
 
     correlation = spearmanr(
         [row[2] for row in rows], [row[3] for row in rows]
-    ).statistic
+    ).statistic # pyright: ignore[reportAttributeAccessIssue]
     with output_path(__file__, "word_similarity_predictions.tsv").open(
         "w", encoding="utf-8", newline=""
     ) as file:

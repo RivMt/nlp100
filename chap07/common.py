@@ -21,7 +21,6 @@ configure_console()
 
 
 def load_split(split: str) -> List[Dict[str, str]]:
-    """Compatibility alias used by the chapter 7 scripts."""
     return load_sst2_split(split)
 
 
@@ -32,12 +31,10 @@ class FeatureExample(TypedDict):
 
 
 def text_to_feature(text: str) -> Dict[str, int]:
-    """Convert whitespace-delimited text to the BoW format from problem 61."""
     return dict(Counter(text.split()))
 
 
 def load_feature_split(split: str) -> List[FeatureExample]:
-    """Load problem 61 output, creating it first when it is missing."""
     if split not in {"train", "dev"}:
         raise ValueError(f"Unsupported feature split: {split!r}")
     (path,) = ensure_problem_outputs(61, f"{split}_features.jsonl")
@@ -52,7 +49,6 @@ def make_vectorizer():
 
 
 def transform_texts(vectorizer, texts):
-    """Transform raw text with the same BoW representation as problem 61."""
     return vectorizer.transform(text_to_feature(text) for text in texts)
 
 
@@ -69,7 +65,6 @@ def train_model(c: float = 1.0):
 
 
 def ensure_model():
-    """Load problem 62 artifacts, training them when necessary."""
     import joblib
 
     vectorizer_path, model_path = ensure_problem_outputs(
