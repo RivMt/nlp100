@@ -1,4 +1,4 @@
-# 言語処理100本ノック 2025 — 第6章〜第8章
+# 言語処理100本ノック 2025 — 第6章〜第9章
 
 富士フイルム自然言語処理課題コードです。
 
@@ -36,13 +36,15 @@ python -c "import torch; print(torch.cuda.is_available(), torch.cuda.get_device_
 
 ### コマンドから実行
 
-`main.py`に実装済みの問題番号（50〜79）を渡して実行します。
+`main.py`に実装済みの問題番号（50〜89）を渡して実行します。
 
 ```powershell
 python main.py 50
 python main.py 60
 python main.py 70
 python main.py 77
+python main.py 80
+python main.py 87
 ```
 
 問題固有の引数は、問題番号の後ろに指定します。
@@ -79,6 +81,9 @@ python main.py 65 "an excellent movie"
 ├── chap08/              # 第8章: ニューラルネット（問題70〜79）
 │   ├── 70.py〜79.py     # 各問題の実装
 │   └── common.py        # データ変換、モデル、学習、評価の共通処理
+├── chap09/              # 第9章: BERT型事前学習済みモデル（問題80〜89）
+│   ├── 80.py〜89.py     # 各問題の実装
+│   └── common.py        # トークン化、学習、評価の共通処理
 ├── utils/               # 章をまたいで利用する共通処理
 ├── res/                 # データセットおよびモデルのキャッシュ
 └── out/                 # 問題ごとの実行結果
@@ -104,6 +109,9 @@ python main.py 65 "an excellent movie"
   問題73を先に実行します。
 - 問題76〜79は、問題75で実装したパディング処理を共通の`collate`関数として
   利用します。
+- 問題86、87、89は、問題85が保存したSST-2のトークン列を利用します。不足している
+  場合は問題85を先に実行します。
+- 問題88は、問題87が保存したファインチューニング済みモデルを利用します。
 
 問題54の対象は`capital-common-countries`セクションのみであるため、その出力に
 文法的アナロジーの事例は含まれません。
@@ -130,6 +138,8 @@ python main.py 65 "an excellent movie"
 問題62の学習済みモデルは`out/62/`、問題69のグラフは`out/69/`に保存されます。
 第8章では、データ変換やパディングの確認結果を`out/70/`〜`out/75/`に、
 学習履歴とモデルを`out/73/model.pt`および`out/76/`〜`out/79/`に保存します。
+第9章では、トークン化・類似度・ミニバッチの結果を`out/80/`〜`out/86/`に、
+学習履歴とモデルを`out/87/`〜`out/89/`に保存します。
 
 `res/`と`out/`の内容はGitの管理対象外です。必要に応じて再生成してください。
 実際に生成した結果は[GitHub Releases](https://github.com/RivMt/nlp100/releases)から
@@ -147,6 +157,9 @@ python main.py 65 "an excellent movie"
 | `NLP100_EMBEDDING` | `glove-wiki-gigaword-50` | 第8章で使用するgensimの単語埋め込み |
 | `NLP100_EPOCHS` | `5` | 第8章の学習エポック数 |
 | `NLP100_MAX_EXAMPLES` | 制限なし | SST-2の各splitから読み込む最大事例数 |
+| `NLP100_BERT_MODEL` | `bert-base-uncased` | 第9章で使用するBERT型モデル |
+| `NLP100_MAX_LENGTH` | `128` | 第9章で使用する最大トークン列長 |
+| `NLP100_BATCH_SIZE` | `16` | 第9章のファインチューニング時のバッチサイズ |
 
 例:
 
